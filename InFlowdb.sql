@@ -5,8 +5,8 @@ use Inflow
 GO
 Create table Account(
 	UserId INT PRIMARY KEY IDENTITY(1,1),
-    UserName NVARCHAR(255) NOT NULL,
-    Email NVARCHAR(255) UNIQUE NOT NULL,
+    UserName NVARCHAR(50) NOT NULL,
+    Email NVARCHAR(50) UNIQUE NOT NULL,
 	Phone VARCHAR(10) UNIQUE NOT NULL,
     PasswordHash NVARCHAR(255) NOT NULL,
 	ResetCode VARCHAR(6),
