@@ -20,7 +20,7 @@ namespace InFlow.Controller
         {
             var result = await _service.RegisterAsync(dto);
 
-            return Ok(result);
+            return result.Success? Ok(result) : BadRequest(result);
         }
 
         [HttpPost("login")]
@@ -28,7 +28,7 @@ namespace InFlow.Controller
         {
             var result = await _service.LoginAsync(dto);
 
-            return Ok(result);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpPost("forgot-password")]
@@ -36,7 +36,7 @@ namespace InFlow.Controller
         {
             var result = await _service.ForgotPasswordAsync(dto);
 
-            return Ok(result);
+            return result.Success ? Ok(result) : NotFound(result);
         }
 
         [HttpPost("verify-resetcode")]
@@ -44,7 +44,7 @@ namespace InFlow.Controller
         {
             var result = await _service.VerifyResetCodeAsync(dto);
 
-            return Ok(result);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
 
@@ -53,7 +53,7 @@ namespace InFlow.Controller
         {
             var result = await _service.ResetPasswordAsync(dto);
 
-            return Ok(result);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
     }
 }
