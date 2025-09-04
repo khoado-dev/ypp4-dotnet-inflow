@@ -1,7 +1,7 @@
 ﻿using Inflow.Config;
 using Microsoft.Extensions.Options;
-using System.Net.Mail;
 using System.Net;
+using System.Net.Mail;
 
 namespace Inflow.Services.EmailService
 {

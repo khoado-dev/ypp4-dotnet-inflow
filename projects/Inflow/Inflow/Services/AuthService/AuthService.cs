@@ -1,10 +1,10 @@
-﻿using Inflow.Repositories.AccountRepo;
-using Inflow.Services.EmailService;
-using System.Security.Cryptography;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-using Inflow.Dtos;
+﻿using Inflow.Dtos;
 using Inflow.Models;
+using Inflow.Repositories.AccountRepo;
+using Inflow.Services.EmailService;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Inflow.Services.AuthService
 {
