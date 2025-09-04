@@ -22,11 +22,11 @@ namespace Inflow.Services.AuthService
         public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
         {
             return !IsValidEmail(dto.Email)
-                ? new AuthResponseDto { Success = false, Message = "Invalid email format" }
+                ? new AuthResponseDto { Success = false, Message = AuthMessageKey.InvalidEmail.GetMessage() }
                 : (await _repo.GetByEmailAsync(dto.Email)) != null
-                    ? new AuthResponseDto { Success = false, Message = "Email already exists" }
+                    ? new AuthResponseDto { Success = false, Message = AuthMessageKey.EmailExists.GetMessage() }
                     : !IsValidPassword(dto.Password)
-                        ? new AuthResponseDto { Success = false, Message = "Password must have 8 characters, uppercase, lowercase and numbers" }
+                        ? new AuthResponseDto { Success = false, Message = AuthMessageKey.WeakPassword.GetMessage() }
                         : await CreateAccountAsync(dto);
         }
 
@@ -41,22 +41,22 @@ namespace Inflow.Services.AuthService
             };
 
             await _repo.CreateAsync(account);
-            return new AuthResponseDto { Success = true, Message = "Register success" };
+            return new AuthResponseDto { Success = true, Message = AuthMessageKey.RegisterSuccess.GetMessage() };
         }
 
         public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
         {
             var account = await _repo.GetByEmailAsync(dto.Email);
             return (account == null || account.PasswordHash != HashPassword(dto.Password))
-                ? new AuthResponseDto { Success = false, Message = "Invalid credentials" }
-                : new AuthResponseDto { Success = true, Message = "Login success" };
+                ? new AuthResponseDto { Success = false, Message = AuthMessageKey.InvalidCredentials.GetMessage() }
+                : new AuthResponseDto { Success = true, Message = AuthMessageKey.LoginSuccess.GetMessage() };
         }
 
         public async Task<AuthResponseDto> ForgotPasswordAsync(ForgotPasswordDto dto)
         {
             var account = await _repo.GetByEmailAsync(dto.Email);
             if (account == null)
-                return new AuthResponseDto { Success = false, Message = "Email not found" };
+                return new AuthResponseDto { Success = false, Message = AuthMessageKey.EmailNotFound.GetMessage() };
 
             var resetCode = new Random().Next(100000, 999999).ToString();
             account.ResetCode = resetCode;
@@ -66,22 +66,26 @@ namespace Inflow.Services.AuthService
                 "Password Reset Code",
                 $"Your reset code is: <b>{resetCode}</b>");
 
-            return new AuthResponseDto { Success = true, Message = $"Reset code sent to {dto.Email}" };
+            return new AuthResponseDto
+            {
+                Success = true,
+                Message = string.Format(AuthMessageKey.ResetCodeSent.GetMessage(), dto.Email)
+            };
         }
 
         public async Task<AuthResponseDto> VerifyResetCodeAsync(VerifyResetCodeDto dto)
         {
             var account = await _repo.GetByResetCodeAsync(dto.Email, dto.ResetCode);
             return account == null
-                ? new AuthResponseDto { Success = false, Message = "Invalid reset code" }
-                : new AuthResponseDto { Success = true, Message = "Validation successfully" };
+                ? new AuthResponseDto { Success = false, Message = AuthMessageKey.InvalidResetCode.GetMessage() }
+                : new AuthResponseDto { Success = true, Message = AuthMessageKey.VerifySuccess.GetMessage() };
         }
 
         public async Task<AuthResponseDto> ResetPasswordAsync(ResetPasswordDto dto)
         {
             var account = await _repo.GetByResetCodeAsync(dto.Email, dto.ResetCode);
             return account == null
-                ? new AuthResponseDto { Success = false, Message = "Invalid reset code" }
+                ? new AuthResponseDto { Success = false, Message = AuthMessageKey.InvalidResetCode.GetMessage() }
                 : await ResetPasswordInternalAsync(account, dto.NewPassword);
         }
 
@@ -91,8 +95,9 @@ namespace Inflow.Services.AuthService
             account.ResetCode = null;
             await _repo.UpdateAsync(account);
 
-            return new AuthResponseDto { Success = true, Message = "Password reset successfully" };
+            return new AuthResponseDto { Success = true, Message = AuthMessageKey.ResetPasswordSuccess.GetMessage() };
         }
+
 
         // Utils
         private string HashPassword(string password)
