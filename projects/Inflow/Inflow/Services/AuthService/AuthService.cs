@@ -47,6 +47,7 @@ namespace Inflow.Services.AuthService
         public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
         {
             var account = await _repo.GetByEmailAsync(dto.Email);
+
             return (account == null || account.PasswordHash != HashPassword(dto.Password))
                 ? new AuthResponseDto { Success = false, Message = AuthMessageKey.InvalidCredentials.GetMessage() }
                 : new AuthResponseDto { Success = true, Message = AuthMessageKey.LoginSuccess.GetMessage() };
@@ -62,9 +63,12 @@ namespace Inflow.Services.AuthService
             account.ResetCode = resetCode;
             await _repo.UpdateAsync(account);
 
+            var emailSubject = "Password Reset Code";
+            var emailBody = $"Your reset code is: <b>{resetCode}</b>";
+
             await _emailService.SendEmailAsync(dto.Email,
-                "Password Reset Code",
-                $"Your reset code is: <b>{resetCode}</b>");
+                emailSubject,
+                emailBody);
 
             return new AuthResponseDto
             {
@@ -76,6 +80,7 @@ namespace Inflow.Services.AuthService
         public async Task<AuthResponseDto> VerifyResetCodeAsync(VerifyResetCodeDto dto)
         {
             var account = await _repo.GetByResetCodeAsync(dto.Email, dto.ResetCode);
+
             return account == null
                 ? new AuthResponseDto { Success = false, Message = AuthMessageKey.InvalidResetCode.GetMessage() }
                 : new AuthResponseDto { Success = true, Message = AuthMessageKey.VerifySuccess.GetMessage() };
@@ -84,6 +89,7 @@ namespace Inflow.Services.AuthService
         public async Task<AuthResponseDto> ResetPasswordAsync(ResetPasswordDto dto)
         {
             var account = await _repo.GetByResetCodeAsync(dto.Email, dto.ResetCode);
+
             return account == null
                 ? new AuthResponseDto { Success = false, Message = AuthMessageKey.InvalidResetCode.GetMessage() }
                 : await ResetPasswordInternalAsync(account, dto.NewPassword);
@@ -104,6 +110,7 @@ namespace Inflow.Services.AuthService
         {
             using var sha = SHA256.Create();
             var bytes = Encoding.UTF8.GetBytes(password);
+
             return Convert.ToBase64String(sha.ComputeHash(bytes));
         }
 

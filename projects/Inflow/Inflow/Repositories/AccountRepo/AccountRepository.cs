@@ -22,11 +22,10 @@ namespace Inflow.Repositories.AccountRepo
         public async Task<Account?> GetByResetCodeAsync(string email, string code)
             => await _context.Account.FirstOrDefaultAsync(a => a.Email == email && a.ResetCode == code);
 
-        public async Task<int> CreateAsync(Account account)
+        public async Task CreateAsync(Account account)
         {
             _context.Account.Add(account);
             await _context.SaveChangesAsync();
-            return account.UserId;
         }
 
         public async Task UpdateAsync(Account account)
