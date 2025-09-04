@@ -1,6 +1,4 @@
-﻿
-
-using Inflow.Models;
+﻿using Inflow.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Inflow.Repositories.AccountRepo
