@@ -36,6 +36,14 @@ namespace InFlow.Controller
             return Ok(result);
         }
 
+        [HttpPost("verify-resetcode")]
+        public async Task<IActionResult> VerifyResetCode(VerifyResetCodeDto dto)
+        {
+            var result = await _service.VerifyResetCodeAsync(dto);
+            return Ok(result);
+        }
+
+
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
         {

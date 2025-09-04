@@ -69,6 +69,15 @@ namespace Inflow.Services.AuthService
 
             return new AuthResponseDto { Success = true, Message = $"Reset code sent to {dto.Email}" };
         }
+        public async Task<AuthResponseDto> VerifyResetCodeAsync(VerifyResetCodeDto dto)
+        {
+            var account = await _repo.GetByResetCodeAsync(dto.Email, dto.ResetCode);
+
+            if (account == null)
+                return new AuthResponseDto { Success = false, Message = "Invalid reset code" };
+
+            return new AuthResponseDto { Success = true, Message = "Validation successfully" };
+        }
 
         public async Task<AuthResponseDto> ResetPasswordAsync(ResetPasswordDto dto)
         {
@@ -103,5 +112,6 @@ namespace Inflow.Services.AuthService
         {
             return new EmailAddressAttribute().IsValid(email);
         }
+
     }
 }
