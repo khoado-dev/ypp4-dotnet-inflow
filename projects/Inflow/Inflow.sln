@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inflow.ServiceDefaults", "I
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inflow", "Inflow\Inflow.csproj", "{05D5F9AD-6860-E85B-11DC-D71AFA2581D4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InflowTest", "InflowTest\InflowTest.csproj", "{146089A7-5CB4-4236-9540-57314E9DC86E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{05D5F9AD-6860-E85B-11DC-D71AFA2581D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05D5F9AD-6860-E85B-11DC-D71AFA2581D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05D5F9AD-6860-E85B-11DC-D71AFA2581D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{146089A7-5CB4-4236-9540-57314E9DC86E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{146089A7-5CB4-4236-9540-57314E9DC86E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{146089A7-5CB4-4236-9540-57314E9DC86E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{146089A7-5CB4-4236-9540-57314E9DC86E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
