@@ -19,11 +19,6 @@ public class AuthControllerTests
         _controller = new AuthController(_serviceMock.Object);
     }
 
-    // Replace lines like:
-    // var bad = Assert.IsInstanceOfType<BadRequestObjectResult>(result);
-    // with:
-    // var bad = Assert.IsInstanceOfType<BadRequestObjectResult>(result, out var badRequestResult);
-
     [TestMethod]
     public async Task Register_ReturnsOk_WhenSuccess()
     {
@@ -34,7 +29,7 @@ public class AuthControllerTests
             Phone = "0900000000",
             Password = "Abc@1234"
         };
-        var resp = new AuthResponseDto { Success = true, Message = "Registered" };
+        var resp = new AuthResponseDto { Success = true, Message = AuthMessageKey.RegisterSuccess.GetMessage() };
 
         _serviceMock.Setup(s => s.RegisterAsync(It.Is<RegisterDto>(x =>
                 x.Email == dto.Email &&
@@ -54,7 +49,7 @@ public class AuthControllerTests
     public async Task Register_ReturnsBadRequest_WhenFail()
     {
         var dto = new RegisterDto { Email = "user@example.com", FirstName = "Khoa", Phone = "0900", Password = "weak" };
-        var resp = new AuthResponseDto { Success = false, Message = "Email already exists" };
+        var resp = new AuthResponseDto { Success = false, Message = AuthMessageKey.EmailExists.GetMessage() };
 
         _serviceMock.Setup(s => s.RegisterAsync(It.IsAny<RegisterDto>())).ReturnsAsync(resp);
 
@@ -70,7 +65,7 @@ public class AuthControllerTests
     public async Task Login_ReturnsOk_WhenSuccess()
     {
         var dto = new LoginDto { Email = "user@example.com", Password = "Abc@1234" };
-        var resp = new AuthResponseDto { Success = true, Message = "ok", Token = "jwt" };
+        var resp = new AuthResponseDto { Success = true, Message = AuthMessageKey.LoginSuccess.GetMessage(), Token = "jwt" };
 
         _serviceMock.Setup(s => s.LoginAsync(It.Is<LoginDto>(x => x.Email == dto.Email && x.Password == dto.Password)))
                     .ReturnsAsync(resp);
@@ -86,7 +81,7 @@ public class AuthControllerTests
     public async Task Login_ReturnsBadRequest_WhenFail()
     {
         var dto = new LoginDto { Email = "user@example.com", Password = "wrong" };
-        var resp = new AuthResponseDto { Success = false, Message = "Invalid credentials" };
+        var resp = new AuthResponseDto { Success = false, Message = AuthMessageKey.InvalidCredentials.GetMessage() };
 
         _serviceMock.Setup(s => s.LoginAsync(It.IsAny<LoginDto>())).ReturnsAsync(resp);
 
@@ -102,7 +97,7 @@ public class AuthControllerTests
     public async Task ForgotPassword_ReturnsOk_WhenSuccess()
     {
         var dto = new ForgotPasswordDto { Email = "user@example.com" };
-        var resp = new AuthResponseDto { Success = true, Message = "Reset code sent" };
+        var resp = new AuthResponseDto { Success = true, Message = AuthMessageKey.ResetCodeSent.GetMessage() };
 
         _serviceMock.Setup(s => s.ForgotPasswordAsync(It.Is<ForgotPasswordDto>(x => x.Email == dto.Email)))
                     .ReturnsAsync(resp);
@@ -118,7 +113,7 @@ public class AuthControllerTests
     public async Task ForgotPassword_ReturnsNotFound_WhenEmailNotFound()
     {
         var dto = new ForgotPasswordDto { Email = "missing@example.com" };
-        var resp = new AuthResponseDto { Success = false, Message = "Email not found" };
+        var resp = new AuthResponseDto { Success = false, Message = AuthMessageKey.EmailNotFound.GetMessage() };
 
         _serviceMock.Setup(s => s.ForgotPasswordAsync(It.IsAny<ForgotPasswordDto>())).ReturnsAsync(resp);
 
@@ -134,7 +129,7 @@ public class AuthControllerTests
     public async Task VerifyResetCode_ReturnsOk_WhenSuccess()
     {
         var dto = new VerifyResetCodeDto { Email = "user@example.com", ResetCode = "123456" };
-        var resp = new AuthResponseDto { Success = true, Message = "Verified" };
+        var resp = new AuthResponseDto { Success = true, Message = AuthMessageKey.VerifySuccess.GetMessage() };
 
         _serviceMock.Setup(s => s.VerifyResetCodeAsync(It.Is<VerifyResetCodeDto>(x => x.Email == dto.Email && x.ResetCode == dto.ResetCode)))
                     .ReturnsAsync(resp);
@@ -150,7 +145,7 @@ public class AuthControllerTests
     public async Task VerifyResetCode_ReturnsBadRequest_WhenInvalid()
     {
         var dto = new VerifyResetCodeDto { Email = "user@example.com", ResetCode = "000000" };
-        var resp = new AuthResponseDto { Success = false, Message = "Invalid code" };
+        var resp = new AuthResponseDto { Success = false, Message = AuthMessageKey.InvalidResetCode.GetMessage() };
 
         _serviceMock.Setup(s => s.VerifyResetCodeAsync(It.IsAny<VerifyResetCodeDto>())).ReturnsAsync(resp);
 
@@ -166,7 +161,7 @@ public class AuthControllerTests
     public async Task ResetPassword_ReturnsOk_WhenSuccess()
     {
         var dto = new ResetPasswordDto { Email = "user@example.com", NewPassword = "New@12345" };
-        var resp = new AuthResponseDto { Success = true, Message = "Password updated" };
+        var resp = new AuthResponseDto { Success = true, Message = AuthMessageKey.ResetPasswordSuccess.GetMessage() };
 
         _serviceMock.Setup(s => s.ResetPasswordAsync(It.Is<ResetPasswordDto>(x => x.Email == dto.Email && x.NewPassword == dto.NewPassword)))
                     .ReturnsAsync(resp);
@@ -182,7 +177,7 @@ public class AuthControllerTests
     public async Task ResetPassword_ReturnsBadRequest_WhenFail()
     {
         var dto = new ResetPasswordDto { Email = "user@example.com", NewPassword = "short" };
-        var resp = new AuthResponseDto { Success = false, Message = "Weak password" };
+        var resp = new AuthResponseDto { Success = false, Message = AuthMessageKey.WeakPassword.GetMessage() };
 
         _serviceMock.Setup(s => s.ResetPasswordAsync(It.IsAny<ResetPasswordDto>())).ReturnsAsync(resp);
 
